@@ -52,15 +52,14 @@ class LoginScreenState extends State<LoginScreen> {
       form.save();
       userAuth.verifyUser(user).then((onValue) {
         if (onValue == "Login Successfull") {
-          _toggleHandler();
-          Navigator.pushNamed(context, "/HomePage");
+          Navigator.pushNamedAndRemoveUntil(context, "/HomePage", ModalRoute.withName('/Login'));
         } else {
-          _toggleHandler();
           showInSnackBar(onValue);
         }
-      }).catchError((PlatformException onError) {
+      }).catchError((e) {
+        showInSnackBar(e.message);
+      }).whenComplete(() {
         _toggleHandler();
-        showInSnackBar(onError.message);
       });
     }
   }

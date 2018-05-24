@@ -12,7 +12,7 @@ class UserData {
 }
 
 class UserAuth {
-  String statusMsg="Account Created Successfully";
+  String statusMsg="Conta criada com sucesso";
   //To create new User
   Future<String> createUser(UserData userData) async{
     FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -23,7 +23,7 @@ class UserAuth {
   }
 
   //To verify new User
-  Future<String> verifyUser (UserData userData) async{
+  Future<String> verifyUser(UserData userData) async{
     FirebaseAuth firebaseAuth = FirebaseAuth.instance;
     await firebaseAuth
         .signInWithEmailAndPassword(email: userData.email, password: userData.password);
