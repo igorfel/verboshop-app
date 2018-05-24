@@ -5,6 +5,6 @@ Criado a partir do [Flutter Login Template](https://github.com/igorfel/flutter-l
 
 ## Tecnologias utilizadas:
 
-* Firebase
-* Flutter
-* Visual Code
+* [Firebase](https://firebase.google.com/)
+* [Flutter](https://flutter.io/)
+* [Visual Code](https://code.visualstudio.com/)
