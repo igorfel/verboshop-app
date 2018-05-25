@@ -1,0 +1,13 @@
+{
+    "saveAndRun": {
+        "commands": [
+            {
+            "match": ".*",
+            "cmd": "R",
+            "useShortcut": false,
+            "silent": false
+            },
+
+        ]
+    }
+}

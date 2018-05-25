@@ -7,6 +7,7 @@ import 'package:verboshop/theme/style.dart';
 class Routes {
 
   var routes = <String, WidgetBuilder>{
+    "/Login": (BuildContext context) => new LoginScreen(),
     "/SignUp": (BuildContext context) => new SignUpScreen(),
     "/HomePage": (BuildContext context) => new HomeScreen()
   };

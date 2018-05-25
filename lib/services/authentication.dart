@@ -29,4 +29,12 @@ class UserAuth {
         .signInWithEmailAndPassword(email: userData.email, password: userData.password);
     return "Login Successfull";
   }
+
+  //To sign out the current User
+  Future<String> signOut() async{
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+    await firebaseAuth
+        .signOut();
+    return "Logout Successfull";
+  }
 }

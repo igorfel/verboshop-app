@@ -47,12 +47,12 @@ class LoginScreenState extends State<LoginScreen> {
     if (!form.validate()) {
       autovalidate = true; // Start validating on every change.
       _toggleHandler();
-      showInSnackBar('Por favor, corrija os erros antes de porsseguir.');
+      showInSnackBar('Por favor, corrija os erros antes de prosseguir.');
     } else {
       form.save();
       userAuth.verifyUser(user).then((onValue) {
         if (onValue == "Login Successfull") {
-          Navigator.pushNamedAndRemoveUntil(context, "/HomePage", ModalRoute.withName('/Login'));
+          Navigator.pushReplacementNamed(context, "/HomePage");
         } else {
           showInSnackBar(onValue);
         }
