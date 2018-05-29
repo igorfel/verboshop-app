@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "style.dart";
 import 'package:verboshop/services/authentication.dart';
 import 'package:verboshop/services/audiosManager.dart';
+import 'package:audioplayers/audioplayer.dart';
 
 class HomeScreen extends StatefulWidget {
 const HomeScreen({ Key key }) : super(key: key);
@@ -16,6 +17,9 @@ class HomeScreenState extends State<HomeScreen>{
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   UserAuth userAuth = new UserAuth();
   AudiosManager audiosManager = new AudiosManager();
+  AudioPlayer audioPlayer = new AudioPlayer();
+  bool isPlaying = false;
+  int currentPlayng = -1;
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
@@ -34,8 +38,32 @@ class HomeScreenState extends State<HomeScreen>{
     });
   }
 
+  void _playAudio(int index) async {
+    if(isPlaying) {
+      audioPlayer.stop();
+      currentPlayng = -1;
+      setState(() { isPlaying = false; });
+    } else {
+      print("buscando " + audiosManager.listOfAudios[index].url);
+      final result = await audioPlayer.play(audiosManager.listOfAudios[index].url, isLocal: false);
+
+      if(result == 1) {
+        currentPlayng = index;
+        setState(() { isPlaying = true; });
+      }
+    }
+  }
+
+  
+
   @override
   Widget build(BuildContext context) {
+    audioPlayer.setCompletionHandler(() {
+      setState(() {
+        isPlaying = false;
+      });
+    });
+
     // TODO: implement build
     return new Scaffold(
       key: _scaffoldKey,
@@ -60,11 +88,11 @@ class HomeScreenState extends State<HomeScreen>{
                 //leading: const Icon(Icons.flight_land),
                 title: new Row(
                   children: <Widget>[
-                    new Expanded(child: new Text('Ministração $index')),
+                    new Expanded(child: new Text(audiosManager.listOfAudios[index].title)),
                     new IconButton(
-                      icon: const Icon(Icons.play_arrow),
+                      icon: (isPlaying && currentPlayng == index) ? Icon(Icons.pause) : Icon(Icons.play_arrow),
                       tooltip: 'Ouvir ministração',
-                      onPressed: () { print("buscando " + audiosManager.listOfAudios[index].url); },
+                      onPressed: () => _playAudio(index),
                     ),
                   ],
                 ),

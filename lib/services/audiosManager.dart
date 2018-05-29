@@ -11,9 +11,9 @@ class AudiosManager{
    * Access the database to retrieve audio information
    */
   void retrieveAudioList(){
-    listOfAudios.add(new Audio(title: "Título 1", minister: "Ministro 1", date: "10/10/2017", url: ":storage/ministração/1"));
-    listOfAudios.add(new Audio(title: "Título 2", minister: "Ministro 3", date: "10/10/2017", url: ":storage/ministração/2"));
-    listOfAudios.add(new Audio(title: "Título 3", minister: "Ministro 2", date: "10/10/2017", url: ":storage/ministração/3"));
+    listOfAudios.add(new Audio(title: "Título 1", minister: "Ministro 1", date: "10/10/2017", url: "http://www.rxlabz.com/labz/audio2.mp3"));
+    listOfAudios.add(new Audio(title: "Título 2", minister: "Ministro 3", date: "10/10/2017", url: "http://www.rxlabz.com/labz/audio.mp3"));
+    listOfAudios.add(new Audio(title: "Título 3", minister: "Ministro 2", date: "10/10/2017", url: "http://www.rxlabz.com/labz/audio2.mp3"));
 
     //return listOfAudios;
   }
