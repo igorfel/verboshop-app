@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "style.dart";
 import 'package:verboshop/services/authentication.dart';
+import 'package:verboshop/services/audiosManager.dart';
 
 class HomeScreen extends StatefulWidget {
 const HomeScreen({ Key key }) : super(key: key);
@@ -14,6 +15,7 @@ class HomeScreenState extends State<HomeScreen>{
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   UserAuth userAuth = new UserAuth();
+  AudiosManager audiosManager = new AudiosManager();
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
@@ -51,6 +53,7 @@ class HomeScreenState extends State<HomeScreen>{
         child:
           new ListView.builder(
             padding: new EdgeInsets.all(8.0),
+            itemCount: audiosManager.listOfAudios.length,
             itemExtent: 80.0,
             itemBuilder: (BuildContext context, int index) {
               return new ListTile(
@@ -61,11 +64,11 @@ class HomeScreenState extends State<HomeScreen>{
                     new IconButton(
                       icon: const Icon(Icons.play_arrow),
                       tooltip: 'Ouvir ministração',
-                      onPressed: () { print("Iniciando ministração"); },
+                      onPressed: () { print("buscando " + audiosManager.listOfAudios[index].url); },
                     ),
                   ],
                 ),
-                subtitle: const Text('Ministro: Nome do Ministro'),
+                subtitle: Text('Ministro: ' + audiosManager.listOfAudios[index].minister),
                 //onTap: () { /* react to the tile being tapped */ }
               );
             },

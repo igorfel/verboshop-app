@@ -1,13 +1,13 @@
 {
-    "saveAndRun": {
-        "commands": [
-            {
-            "match": ".*",
-            "cmd": "R",
-            "useShortcut": false,
-            "silent": false
-            },
+    // "saveAndRun": {
+    //     "commands": [
+    //         {
+    //         "match": ".*",
+    //         "cmd": "R",
+    //         "useShortcut": false,
+    //         "silent": false
+    //         },
 
-        ]
-    }
+    //     ]
+    // }
 }

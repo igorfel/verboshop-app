@@ -8,7 +8,7 @@ class Validations{
     return null;
   }
 
-    String validateEmail(String value) {
+  String validateEmail(String value) {
     if (value.isEmpty) return 'Campo de email é obrigatório.';
     final RegExp nameExp = new RegExp(r'^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$');
     if (!nameExp.hasMatch(value)) return 'Endereço de email inválido';
