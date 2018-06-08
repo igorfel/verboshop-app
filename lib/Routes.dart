@@ -15,7 +15,7 @@ class Routes {
   Routes() {
     runApp(new MaterialApp(
       title: "Verboshop",
-      home: new LoginScreen(),
+      home: new HomeScreen(),
       theme: appTheme,
       routes: routes,
     ));
