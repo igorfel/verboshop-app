@@ -4,7 +4,6 @@ import "package:flutter/material.dart";
 import "style.dart";
 import 'package:verboshop/services/authentication.dart';
 import 'package:verboshop/services/audiosManager.dart';
-import 'package:audioplayers/audioplayer.dart';
 
 import 'package:local_notifications/local_notifications.dart';
 
@@ -19,14 +18,13 @@ class HomeScreenState extends State<HomeScreen>{
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  bool isPlaying = false;
-  int currentPlaying = -1, lastPlayingIndex = -1;
-  Duration lastDuration, lastPosition;
-  String currentTitle, currentContent;
+  bool showPlayIcon = true;
+  // int currentPlaying = -1, lastPlayingIndex = -1;
+  // Duration lastDuration, lastPosition;
+  // String currentTitle, currentContent;
 
   UserAuth userAuth = new UserAuth();
   AudiosManager audiosManager = new AudiosManager();
-  AudioPlayer audioPlayer = new AudioPlayer();
 
   // LocalNotifications localNotifications;
 
@@ -38,7 +36,8 @@ class HomeScreenState extends State<HomeScreen>{
   void _handleSignOut() {
     userAuth.signOut().then((onValue) {
       if(onValue == "Logout Successfull"){
-        audioPlayer.stop();
+        audiosManager.stop();
+        _cancelNotification();
         Navigator.pushNamedAndRemoveUntil(context, "/Login", (_) => false);
       } else {
         showInSnackBar(onValue);
@@ -49,34 +48,35 @@ class HomeScreenState extends State<HomeScreen>{
   }
 
   void _playAudio(int index) async {
-    if(isPlaying) {
-      audioPlayer.pause();
-      currentPlaying = -1;
-      setState(() { isPlaying = false; });
+    await audiosManager.play(index);
+
+    _showNotification(audiosManager.listOfAudios[index].title, "Ministro: " + audiosManager.listOfAudios[index].minister);
+
+    updateUI();
+  }
+
+  void _pauseAudio() async {
+    await audiosManager.pause();
+
+    updateUI();
+  }
+
+  void playPauseOnNotification(String payload) async {
+    if(audiosManager.isPlaying) {
+      await audiosManager.pause();
     } else {
-      print("buscando " + audiosManager.listOfAudios[index].url);
-      final result = await audioPlayer.play(audiosManager.listOfAudios[index].url, isLocal: false);
-
-      if(result == 1) {
-        saveCurrentAudioInfo(index);
-
-        if(lastPlayingIndex == index && lastPosition != null && lastPosition.inSeconds > 0)
-          audioPlayer.seek(lastPosition.inSeconds.toDouble());
-
-        setState(() { isPlaying = true; });
-
-        _showNotification(audiosManager.listOfAudios[index].title, "Ministro: " + audiosManager.listOfAudios[index].minister);
-      }
+      await audiosManager.resume();
     }
+
+    updateUI();
   }
 
-  void playPauseOnNotification(String payload){
-    _playAudio(lastPlayingIndex);
-  }
-
-  void saveCurrentAudioInfo(int index) {
-    currentPlaying = index;
-    lastPlayingIndex = index;
+  void updateUI() {
+    if(audiosManager.isPlaying){
+      setState(() { showPlayIcon = false; });
+    } else {
+      setState(() { showPlayIcon = true; });
+    }
   }
 
   Future _showNotification(String title, String content) async {
@@ -101,19 +101,12 @@ class HomeScreenState extends State<HomeScreen>{
 
   @override
   Widget build(BuildContext context) {
-    audioPlayer.setCompletionHandler(() {
-      setState(() {
-        isPlaying = false;
-      });
+
+    audiosManager.audioPlayer.setCompletionHandler(() {
+      audiosManager.complete();
+
+      setState(() { showPlayIcon = true; });
     });
-
-    audioPlayer.setDurationHandler((Duration d) => setState(() {
-      lastDuration = d;
-    }));
-
-    audioPlayer.setPositionHandler((Duration  p) => setState(() {
-      lastPosition = p;
-    }));
 
     // TODO: implement build
     return new Scaffold(
@@ -122,7 +115,7 @@ class HomeScreenState extends State<HomeScreen>{
             title: new Text('VERBOSHOP'),
             actions: <Widget>[
               new IconButton(
-                icon: new Icon(Icons.redo),
+                icon: new Icon(Icons.power_settings_new),
                 tooltip: 'SAIR',
                 onPressed: _handleSignOut,
               ),
@@ -141,9 +134,10 @@ class HomeScreenState extends State<HomeScreen>{
                   children: <Widget>[
                     new Expanded(child: new Text(audiosManager.listOfAudios[index].title)),
                     new IconButton(
-                      icon: (isPlaying && currentPlaying == index) ? Icon(Icons.pause) : Icon(Icons.play_arrow),
-                      tooltip: 'Ouvir ministração',
-                      onPressed: () => _playAudio(index),
+                      icon: (audiosManager.currentPlaying == index && !showPlayIcon) ? new Icon(Icons.pause) : new Icon(Icons.play_arrow),
+                      tooltip: 'Ouvir/pausar ministração',
+                      onPressed: (audiosManager.currentPlaying == index && !showPlayIcon) ? () => _pauseAudio() : () => _playAudio(index),
+
                     ),
                   ],
                 ),
