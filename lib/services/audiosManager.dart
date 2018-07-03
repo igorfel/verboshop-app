@@ -97,7 +97,7 @@ class AudiosListState extends State<AudioList> {
     id: '0',
     name: 'CustomNotificationChannel',
     description: 'Grant this app the ability to show notifications',
-    importance: AndroidNotificationChannelImportance.LOW,
+    importance: AndroidNotificationChannelImportance.MAX,
     vibratePattern: AndroidVibratePatterns.NONE
   );
 
@@ -116,7 +116,7 @@ class AudiosListState extends State<AudioList> {
         ],
         androidSettings: new AndroidSettings(
           channel: channel,
-          priority: AndroidNotificationPriority.LOW
+          priority: AndroidNotificationPriority.HIGH
         )
     );
   }
