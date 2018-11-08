@@ -102,11 +102,11 @@ class HomeScreenState extends State<HomeScreen>{
   @override
   Widget build(BuildContext context) {
 
-    audiosManager.audioPlayer.setCompletionHandler(() {
+    audiosManager.audioPlayer.completionHandler = () {
       audiosManager.complete();
 
       setState(() { showPlayIcon = true; });
-    });
+    };
 
     // TODO: implement build
     return new Scaffold(

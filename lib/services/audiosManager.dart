@@ -1,5 +1,5 @@
 import 'package:verboshop/models/audio.dart';
-import 'package:audioplayers/audioplayer.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'dart:async';
 
 class AudiosManager {

@@ -91,10 +91,10 @@ class LoginScreenState extends State<LoginScreen> {
                   new Container(
                     height: screenSize.height / 2,
                     child: new Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
+
                       children: <Widget>[
-                        new Center(
+                        new Hero(
+                            tag: 'VSDove',
                             child: new Image(
                           image: logo,
                           width: (screenSize.width < 500)
@@ -117,7 +117,7 @@ class LoginScreenState extends State<LoginScreen> {
                           child: new Column(
                             children: <Widget>[
                               new InputField(
-                                  hintText: "Email",
+                                  hintText: "Usuário",
                                   obscureText: false,
                                   textInputType: TextInputType.emailAddress,
                                   textStyle: textStyle,
@@ -168,7 +168,7 @@ class LoginScreenState extends State<LoginScreen> {
                                 onPressed: () => onPressed("/SignUp"),
                                 buttonTextStyle: buttonTextStyle),
                             new TextButton(
-                                buttonName: "Ajuda",
+                                buttonName: "Informações",
                                 onPressed: _onPressed,
                                 buttonTextStyle: buttonTextStyle)
                           ],

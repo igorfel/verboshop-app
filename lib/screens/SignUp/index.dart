@@ -56,17 +56,26 @@ class SignUpScreenState extends State<SignUpScreen> {
         key: _scaffoldKey,
         body: new SingleChildScrollView(
           child: new Container(
-            padding: new EdgeInsets.all(16.0),
+            padding: new EdgeInsets.only(left: 16.0, right: 16.0),
             decoration: new BoxDecoration(image: backgroundImage),
+            height: screenSize.height,
             child: new Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                new SizedBox(
-                    height: screenSize.height / 2,
+                new Container(
+                    //height: screenSize.height / 2.5,
                     child: new Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
+                        new Hero(
+                            tag: 'VSDove',
+                            child: new Image(
+                          image: logo,
+                          width: (screenSize.width < 500)
+                              ? 150.0
+                              : (screenSize.width / 4),
+                          height: screenSize.height / 4,
+                        )),
                         new Text(
                           "CRIAR NOVA CONTA",
                           textAlign: TextAlign.center,
@@ -74,8 +83,8 @@ class SignUpScreenState extends State<SignUpScreen> {
                         )
                       ],
                     )),
-                new SizedBox(
-                  height: screenSize.height / 2,
+                new Container(
+                  //height: screenSize.height / 1.5,
                   child: new Column(
                     children: <Widget>[
                       new Form(
