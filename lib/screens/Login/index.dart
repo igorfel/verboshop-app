@@ -121,7 +121,7 @@ class LoginScreenState extends State<LoginScreen> {
                                   obscureText: false,
                                   textInputType: TextInputType.emailAddress,
                                   textStyle: textStyle,
-                                  //textFieldColor: textFieldColor,
+                                  //textFieldColor: Colors.white,
                                   icon: Icons.mail_outline,
                                   iconColor: Colors.white,
                                   bottomMargin: 20.0,

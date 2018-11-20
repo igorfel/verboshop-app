@@ -43,6 +43,7 @@ class InputField extends StatelessWidget {
             validator: validateFunction,
             onSaved: onSaved,
             decoration: new InputDecoration(
+              focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.red[300])),
               hintText: hintText,
               hintStyle: hintStyle,
               icon: new Icon(

@@ -3,11 +3,16 @@ import 'package:flutter/material.dart';
 TextStyle textStyle = const TextStyle(
     color: const Color.fromRGBO(255, 255, 255, 1.0),
     fontSize: 16.0,
-    fontWeight: FontWeight.normal);
+    fontWeight: FontWeight.normal,
+    );
 
 ThemeData appTheme = new ThemeData(
   hintColor: Colors.white,
-  brightness: Brightness.dark
+  brightness: Brightness.light,
+  textSelectionColor: primaryColor,
+  textSelectionHandleColor: primaryColor,
+  primaryColor: Colors.red[900],
+  accentColor: Colors.redAccent,
 );
 
 Color textFieldColor = const Color.fromRGBO(255, 255, 255, 0.1);

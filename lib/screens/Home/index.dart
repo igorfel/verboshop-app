@@ -14,18 +14,23 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen>{
-
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
   bool showPlayIcon = true;
   // int currentPlaying = -1, lastPlayingIndex = -1;
   // Duration lastDuration, lastPosition;
   // String currentTitle, currentContent;
 
   UserAuth userAuth = new UserAuth();
-  AudiosManager audiosManager = new AudiosManager();
+  //AudiosManager audiosManager = new AudiosManager();
 
   // LocalNotifications localNotifications;
+
+  int _selectedIndex = 1;
+  final _widgetOptions = [
+    Text('Index 0: Home'),
+    Text('Index 1: Search'),
+    Container(child: Column(children: <Widget>[Text('Index 2: Account')],),)
+  ];
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
@@ -35,7 +40,7 @@ class HomeScreenState extends State<HomeScreen>{
   void _handleSignOut() {
     userAuth.signOut().then((onValue) {
       if(onValue == "Logout Successfull"){
-        audiosManager.stop();
+        //audiosManager.stop();
         //_cancelNotification();
         Navigator.pushNamedAndRemoveUntil(context, "/Login", (_) => false);
       } else {
@@ -49,27 +54,41 @@ class HomeScreenState extends State<HomeScreen>{
   @override
   Widget build(BuildContext context) {
 
-    audiosManager.audioPlayer.completionHandler = () {
-      audiosManager.complete();
+    // audiosManager.audioPlayer.completionHandler = () {
+    //   audiosManager.complete();
 
-      setState(() { showPlayIcon = true; });
-    };
+    //   setState(() { showPlayIcon = true; });
+    // };
 
     // TODO: implement build
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
             title: new Text('VERBOSHOP'),
-            actions: <Widget>[
-              new IconButton(
-                icon: new Icon(Icons.power_settings_new),
-                tooltip: 'SAIR',
-                onPressed: _handleSignOut,
-              ),
-            ],
           ),
-      body: new AudioList(audiosManager),
+      body:   Center(
+       child: _widgetOptions.elementAt(_selectedIndex),
+     ),
+     bottomNavigationBar: BottomNavigationBar(
+       items: <BottomNavigationBarItem>[
+         BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('Início')),
+         BottomNavigationBarItem(icon: Icon(Icons.search), title: Text('Procurar')),
+         BottomNavigationBarItem(icon: Icon(Icons.account_circle), title: Text('Conta')),
+       ],
+       currentIndex: _selectedIndex,
+       fixedColor: Colors.red[900],
+       onTap: _onItemTapped,
+     ),
     );
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      if(index == 2){
+        _handleSignOut();
+      }
+    });
   }
 }
 
