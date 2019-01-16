@@ -13,6 +13,7 @@ ThemeData appTheme = new ThemeData(
   textSelectionHandleColor: primaryColor,
   primaryColor: Colors.red[900],
   accentColor: Colors.redAccent,
+  cursorColor: Colors.redAccent
 );
 
 Color textFieldColor = const Color.fromRGBO(255, 255, 255, 0.1);
