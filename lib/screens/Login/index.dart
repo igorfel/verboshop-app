@@ -91,17 +91,16 @@ class LoginScreenState extends State<LoginScreen> {
                   new Container(
                     height: screenSize.height / 2,
                     child: new Column(
-
                       children: <Widget>[
                         new Hero(
                             tag: 'VSDove',
                             child: new Image(
-                          image: logo,
-                          width: (screenSize.width < 500)
-                              ? 270.0
-                              : (screenSize.width / 4) + 32.0,
-                          height: screenSize.height / 4 + 80,
-                        ))
+                              image: logo,
+                              width: (screenSize.width < 500)
+                                  ? 270.0
+                                  : (screenSize.width / 4) + 32.0,
+                              height: screenSize.height / 4 + 80,
+                            ))
                       ],
                     ),
                   ),
@@ -143,20 +142,23 @@ class LoginScreenState extends State<LoginScreen> {
                                   onSaved: (String password) {
                                     user.password = password;
                                   }),
-                              (isHandlingLogin) ? 
-                                new CircularProgressIndicator(
-                                  value: null,
-                                  strokeWidth: 4.0,
-                                  valueColor: new AlwaysStoppedAnimation<Color>(primaryColor),
-                              ) : new RoundedButton(
-                                buttonName: "Entrar",
-                                onTap: _handleSubmitted,
-                                width: screenSize.width,
-                                height: 50.0,
-                                bottomMargin: 10.0,
-                                borderWidth: 0.0,
-                                buttonColor: primaryColor,
-                              ),
+                              (isHandlingLogin)
+                                  ? new CircularProgressIndicator(
+                                      value: null,
+                                      strokeWidth: 4.0,
+                                      valueColor:
+                                          new AlwaysStoppedAnimation<Color>(
+                                              primaryColor),
+                                    )
+                                  : new RoundedButton(
+                                      buttonName: "Entrar",
+                                      onTap: _handleSubmitted,
+                                      width: screenSize.width,
+                                      height: 50.0,
+                                      bottomMargin: 10.0,
+                                      borderWidth: 0.0,
+                                      buttonColor: primaryColor,
+                                    ),
                             ],
                           ),
                         ),

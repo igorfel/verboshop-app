@@ -32,33 +32,30 @@ class InputField extends StatelessWidget {
     return (new Container(
         margin: new EdgeInsets.only(bottom: bottomMargin),
         child: new DecoratedBox(
-          decoration: new BoxDecoration(
-              borderRadius: new BorderRadius.all(new Radius.circular(30.0)),
-              color: textFieldColor),
-          child: Row(
-            children: <Widget>[
-              Icon(
-                icon,
-                color: iconColor,
-              ),
-              new TextFormField(
-                style: textStyle,
-                key: key,
-                obscureText: obscureText,
-                keyboardType: textInputType,
-                validator: validateFunction,
-                onSaved: onSaved,
-                decoration: new InputDecoration.collapsed(
-                  hintText: hintText,
-                  hintStyle: hintStyle,
-                  // icon: new Icon(
-                  //   icon,
-                  //   color: iconColor,
-                  // ),
+            decoration: new BoxDecoration(
+                borderRadius: new BorderRadius.all(new Radius.circular(30.0)),
+                color: textFieldColor),
+            child: Row(
+              children: <Widget>[
+                Icon(
+                  icon,
+                  color: iconColor,
                 ),
-              ),
-            ],
-          )
-        )));
+                new Flexible(
+                  child: new TextFormField(
+                    style: textStyle,
+                    key: key,
+                    obscureText: obscureText,
+                    keyboardType: textInputType,
+                    validator: validateFunction,
+                    onSaved: onSaved,
+                    decoration: new InputDecoration(
+                      hintText: hintText,
+                      hintStyle: hintStyle,
+                    ),
+                  ),
+                ),
+              ],
+            ))));
   }
 }

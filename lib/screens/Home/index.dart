@@ -5,15 +5,14 @@ import "style.dart";
 import 'package:verboshop/services/authentication.dart';
 import 'package:verboshop/services/audiosManager.dart';
 
-
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({ Key key }) : super(key: key);
+  const HomeScreen({Key key}) : super(key: key);
 
   @override
   HomeScreenState createState() => new HomeScreenState();
 }
 
-class HomeScreenState extends State<HomeScreen>{
+class HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool showPlayIcon = true;
   // int currentPlaying = -1, lastPlayingIndex = -1;
@@ -29,7 +28,11 @@ class HomeScreenState extends State<HomeScreen>{
   final _widgetOptions = [
     Text('Index 0: Home'),
     Text('Index 1: Search'),
-    Container(child: Column(children: <Widget>[Text('Index 2: Account')],),)
+    Container(
+      child: Column(
+        children: <Widget>[Text('Index 2: Account')],
+      ),
+    )
   ];
 
   void showInSnackBar(String value) {
@@ -39,7 +42,7 @@ class HomeScreenState extends State<HomeScreen>{
 
   void _handleSignOut() {
     userAuth.signOut().then((onValue) {
-      if(onValue == "Logout Successfull"){
+      if (onValue == "Logout Successfull") {
         //audiosManager.stop();
         //_cancelNotification();
         Navigator.pushNamedAndRemoveUntil(context, "/Login", (_) => false);
@@ -53,7 +56,6 @@ class HomeScreenState extends State<HomeScreen>{
 
   @override
   Widget build(BuildContext context) {
-
     // audiosManager.audioPlayer.completionHandler = () {
     //   audiosManager.complete();
 
@@ -64,28 +66,31 @@ class HomeScreenState extends State<HomeScreen>{
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-            title: new Text('VERBOSHOP'),
-          ),
-      body:   Center(
-       child: _widgetOptions.elementAt(_selectedIndex),
-     ),
-     bottomNavigationBar: BottomNavigationBar(
-       items: <BottomNavigationBarItem>[
-         BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('Início')),
-         BottomNavigationBarItem(icon: Icon(Icons.search), title: Text('Procurar')),
-         BottomNavigationBarItem(icon: Icon(Icons.account_circle), title: Text('Conta')),
-       ],
-       currentIndex: _selectedIndex,
-       fixedColor: Colors.red[900],
-       onTap: _onItemTapped,
-     ),
+        title: new Text('VERBO STORE'),
+      ),
+      body: Center(
+        child: _widgetOptions.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+              icon: Icon(Icons.home), title: Text('Início')),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.search), title: Text('Procurar')),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle), title: Text('Conta')),
+        ],
+        currentIndex: _selectedIndex,
+        fixedColor: Colors.red[900],
+        onTap: _onItemTapped,
+      ),
     );
   }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      if(index == 2){
+      if (index == 2) {
         _handleSignOut();
       }
     });
