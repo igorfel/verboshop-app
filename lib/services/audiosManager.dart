@@ -19,7 +19,7 @@
 
 //   Future play(String url) async {
 //     if(isPlaying && currentPlaying == url) return;
-    
+
 //     if(isPlaying || url != lastPlayingIndex)
 //       audioPlayer.stop();
 
@@ -46,7 +46,7 @@
 //       print("Paused: " + lastPlayingIndex);
 //     }
 //   }
-  
+
 //   Future resume() async {
 //     await play(lastPlayingIndex);
 //   }
@@ -71,7 +71,7 @@
 
 //   AudioList(AudiosManager audiosManager){
 //     this.audiosManager = audiosManager;
-//   }  
+//   }
 
 //   @override
 //   AudiosListState createState() => new AudiosListState(audiosManager);

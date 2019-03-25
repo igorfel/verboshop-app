@@ -8,14 +8,14 @@ import 'package:verboshop/components/Buttons/roundedButton.dart';
 import 'package:verboshop/services/validations.dart';
 import 'package:verboshop/services/authentication.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key key}) : super(key: key);
 
   @override
-  LoginScreenState createState() => new LoginScreenState();
+  LoginPageState createState() => new LoginPageState();
 }
 
-class LoginScreenState extends State<LoginScreen> {
+class LoginPageState extends State<LoginPage> {
   BuildContext context;
   final GlobalKey<FormState> formKey = new GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();

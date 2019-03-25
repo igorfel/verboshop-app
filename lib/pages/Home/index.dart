@@ -5,14 +5,14 @@ import "style.dart";
 import 'package:verboshop/services/authentication.dart';
 import 'package:verboshop/services/audiosManager.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  const HomePage({Key key}) : super(key: key);
 
   @override
-  HomeScreenState createState() => new HomeScreenState();
+  HomePageState createState() => new HomePageState();
 }
 
-class HomeScreenState extends State<HomeScreen> {
+class HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool showPlayIcon = true;
   // int currentPlaying = -1, lastPlayingIndex = -1;

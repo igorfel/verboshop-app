@@ -1,22 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:verboshop/screens/Login/index.dart';
-import 'package:verboshop/screens/SignUp/index.dart';
-import 'package:verboshop/screens/Home/index.dart';
+import 'package:verboshop/pages/Login/index.dart';
+import 'package:verboshop/pages/SignUp/index.dart';
+import 'package:verboshop/pages/Home/index.dart';
 import 'package:verboshop/theme/style.dart';
+
+import 'blocs/blocProvider.dart';
 
 class Routes {
   var routes = <String, WidgetBuilder>{
-    "/Login": (BuildContext context) => new LoginScreen(),
-    "/SignUp": (BuildContext context) => new SignUpScreen(),
-    "/HomePage": (BuildContext context) => new HomeScreen()
+    "/Login": (BuildContext context) => new LoginPage(),
+    "/SignUp": (BuildContext context) => new SignUpPage(),
+    "/HomePage": (BuildContext context) => new HomePage()
   };
 
   Routes() {
-    runApp(new MaterialApp(
+    runApp(BlocProvider<ApplicationBloc>(
+      bloc: ApplicationBloc(),
+      child: BlocProvider<>()
+      );
+  }
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
       title: "Verboshop",
-      home: new HomeScreen(),
+      home: new HomePage(),
       theme: appTheme,
       routes: routes,
-    ));
+    )
   }
 }

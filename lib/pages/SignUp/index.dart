@@ -8,14 +8,14 @@ import 'package:verboshop/services/validations.dart';
 import 'package:verboshop/services/authentication.dart';
 import 'package:verboshop/theme/style.dart';
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key key}) : super(key: key);
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({Key key}) : super(key: key);
 
   @override
-  SignUpScreenState createState() => new SignUpScreenState();
+  SignUpPageState createState() => new SignUpPageState();
 }
 
-class SignUpScreenState extends State<SignUpScreen> {
+class SignUpPageState extends State<SignUpPage> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   UserData newUser = new UserData();
