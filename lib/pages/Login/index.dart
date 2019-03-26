@@ -116,32 +116,25 @@ class LoginPageState extends State<LoginPage> {
                           child: new Column(
                             children: <Widget>[
                               new InputField(
-                                  hintText: "Usuário",
-                                  obscureText: false,
-                                  textInputType: TextInputType.emailAddress,
-                                  textStyle: textStyle,
-                                  //textFieldColor: Colors.white,
-                                  icon: Icons.mail_outline,
-                                  iconColor: Colors.white,
-                                  bottomMargin: 20.0,
-                                  validateFunction: validations.validateEmail,
-                                  onSaved: (String email) {
-                                    user.email = email;
-                                  }),
+                                hintText: "Usuário",
+                                obscureText: false,
+                                textInputType: TextInputType.emailAddress,
+                                textStyle: textStyle,
+                                //textFieldColor: Colors.white,
+                                icon: Icons.mail_outline,
+                                iconColor: Colors.white,
+                                bottomMargin: 20.0,
+                              ),
                               new InputField(
-                                  hintText: "Senha",
-                                  obscureText: true,
-                                  textInputType: TextInputType.text,
-                                  textStyle: textStyle,
-                                  // textFieldColor: textFieldColor,
-                                  icon: Icons.lock_open,
-                                  iconColor: Colors.white,
-                                  bottomMargin: 30.0,
-                                  validateFunction:
-                                      validations.validatePassword,
-                                  onSaved: (String password) {
-                                    user.password = password;
-                                  }),
+                                hintText: "Senha",
+                                obscureText: true,
+                                textInputType: TextInputType.text,
+                                textStyle: textStyle,
+                                // textFieldColor: textFieldColor,
+                                icon: Icons.lock_open,
+                                iconColor: Colors.white,
+                                bottomMargin: 30.0,
+                              ),
                               (isHandlingLogin)
                                   ? new CircularProgressIndicator(
                                       value: null,

@@ -1,12 +1,15 @@
+import 'style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'style.dart';
-import 'package:verboshop/components/TextFields/inputField.dart';
-import 'package:verboshop/components/Buttons/textButton.dart';
-import 'package:verboshop/components/Buttons/roundedButton.dart';
+import 'package:verboshop/theme/style.dart';
 import 'package:verboshop/services/validations.dart';
 import 'package:verboshop/services/authentication.dart';
-import 'package:verboshop/theme/style.dart';
+import 'package:verboshop/components/Buttons/textButton.dart';
+import 'package:verboshop/components/Buttons/roundedButton.dart';
+import 'package:verboshop/components/TextFields/inputField.dart';
+
+import 'package:verboshop/blocs/blocProvider.dart';
+import 'package:verboshop/blocs/authBloc.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key key}) : super(key: key);
@@ -16,42 +19,13 @@ class SignUpPage extends StatefulWidget {
 }
 
 class SignUpPageState extends State<SignUpPage> {
-  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  UserData newUser = new UserData();
-  UserAuth userAuth = new UserAuth();
-  bool _autovalidate = false;
-  Validations _validations = new Validations();
-
-  _onPressed() {
-    // print("Botão pressionado");
-  }
-
-  void showInSnackBar(String value) {
-    _scaffoldKey.currentState
-        .showSnackBar(new SnackBar(content: new Text(value)));
-  }
-
-  void _handleSubmitted() {
-    final FormState form = _formKey.currentState;
-    if (!form.validate()) {
-      _autovalidate = true; // Start validating on every change.
-      showInSnackBar('Por favor, corrija os erros antes de porsseguir.');
-    } else {
-      form.save();
-      userAuth.createUser(newUser).then((onValue) {
-        showInSnackBar(onValue);
-      }).catchError((PlatformException onError) {
-        showInSnackBar(onError.message);
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    final AuthBloc bloc = BlocProvider.of<AuthBloc>(context);
     Size screenSize = MediaQuery.of(context).size;
-    //print(context.widget.toString());
+
     return new Scaffold(
         key: _scaffoldKey,
         body: new SingleChildScrollView(
@@ -65,87 +39,46 @@ class SignUpPageState extends State<SignUpPage> {
                 new Container(
                     //height: screenSize.height / 2.5,
                     child: new Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        new Hero(
-                            tag: 'VSDove',
-                            child: new Image(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    new Hero(
+                        tag: 'VSDove',
+                        child: new Image(
                           image: logo,
                           width: (screenSize.width < 500)
                               ? 150.0
                               : (screenSize.width / 4),
                           height: screenSize.height / 4,
                         )),
-                        new Text(
-                          "CRIAR NOVA CONTA",
-                          textAlign: TextAlign.center,
-                          style: headingStyle,
-                        )
-                      ],
-                    )),
+                    new Text(
+                      "CRIAR NOVA CONTA",
+                      textAlign: TextAlign.center,
+                      style: headingStyle,
+                    )
+                  ],
+                )),
                 new Container(
                   //height: screenSize.height / 1.5,
                   child: new Column(
                     children: <Widget>[
-                      new Form(
-                          key: _formKey,
-                          autovalidate: _autovalidate,
-                          //onWillPop: _warnUserAboutInvalidData,
-                          child: new Column(
-                            children: <Widget>[
-                              new InputField(
-                                hintText: "Usuário",
-                                obscureText: false,
-                                textInputType: TextInputType.text,
-                                textStyle: textStyle,
-                                textFieldColor: textFieldColor,
-                                icon: Icons.person_outline,
-                                iconColor: Colors.white,
-                                bottomMargin: 20.0,
-                                validateFunction: _validations.validateName,
-                                onSaved: (String name) {
-                                  newUser.displayName = name;
-                                },
-                              ),
-                              new InputField(
-                                  hintText: "Email",
-                                  obscureText: false,
-                                  textInputType: TextInputType.emailAddress,
-                                  textStyle: textStyle,
-                                  textFieldColor: textFieldColor,
-                                  icon: Icons.mail_outline,
-                                  iconColor: Colors.white,
-                                  bottomMargin: 20.0,
-                                  validateFunction: _validations.validateEmail,
-                                  onSaved: (String email) {
-                                    newUser.email = email;
-                                  }),
-                              new InputField(
-                                  hintText: "Senha",
-                                  obscureText: true,
-                                  textInputType: TextInputType.text,
-                                  textStyle: textStyle,
-                                  textFieldColor: textFieldColor,
-                                  icon: Icons.lock_open,
-                                  iconColor: Colors.white,
-                                  bottomMargin: 40.0,
-                                  validateFunction:
-                                      _validations.validatePassword,
-                                  onSaved: (String password) {
-                                    newUser.password = password;
-                                  }),
-                              new RoundedButton(
-                                  buttonName: "Confirmar",
-                                  onTap: _handleSubmitted,
-                                  width: screenSize.width,
-                                  height: 50.0,
-                                  bottomMargin: 10.0,
-                                  borderWidth: 1.0)
-                            ],
-                          )),
+                      new Column(
+                        children: <Widget>[
+                          usernameField(bloc),
+                          emailField(bloc),
+                          passwordField(bloc),
+                          submitButton(bloc, screenSize),
+                          StreamBuilder(
+                              stream: bloc.validAccount,
+                              builder: (context, snapshot) {
+                                if (snapshot.hasError)
+                                  _showDialog(snapshot.error, context);
+                                return new Container();
+                              })
+                        ],
+                      ),
                       new TextButton(
                         buttonName: "Termos e Condições",
-                        onPressed: _onPressed,
+                        onPressed: () {},
                         buttonTextStyle: buttonTextStyle,
                       )
                     ],
@@ -155,5 +88,102 @@ class SignUpPageState extends State<SignUpPage> {
             ),
           ),
         ));
+  }
+
+  Widget usernameField(bloc) {
+    return StreamBuilder(
+      stream: bloc.username,
+      builder: (context, snapshot) {
+        return InputField(
+            hintText: "Usuário",
+            obscureText: false,
+            textInputType: TextInputType.text,
+            textStyle: textStyle,
+            textFieldColor: textFieldColor,
+            icon: Icons.person_outline,
+            iconColor: Colors.white,
+            bottomMargin: 20.0,
+            onChanged: bloc.changeUsername,
+            errorText: snapshot.error);
+      },
+    );
+  }
+
+  Widget emailField(bloc) {
+    return StreamBuilder(
+      stream: bloc.email,
+      builder: (context, snapshot) {
+        return new InputField(
+            hintText: "Email",
+            obscureText: false,
+            textInputType: TextInputType.emailAddress,
+            textStyle: textStyle,
+            textFieldColor: textFieldColor,
+            icon: Icons.mail_outline,
+            iconColor: Colors.white,
+            bottomMargin: 20.0,
+            onChanged: bloc.changeEmail,
+            errorText: snapshot.error);
+      },
+    );
+  }
+
+  Widget passwordField(bloc) {
+    return StreamBuilder(
+      stream: bloc.password,
+      builder: (context, snapshot) {
+        return new InputField(
+            hintText: "Senha",
+            obscureText: true,
+            textInputType: TextInputType.text,
+            textStyle: textStyle,
+            textFieldColor: textFieldColor,
+            icon: Icons.lock_open,
+            iconColor: Colors.white,
+            bottomMargin: 40.0,
+            onChanged: bloc.changePassword,
+            errorText: snapshot.error);
+      },
+    );
+  }
+
+  Widget submitButton(bloc, screenSize) {
+    return StreamBuilder(
+      stream: bloc.submitValidAccount,
+      builder: (context, snapshot) {
+        print("Snapshot has account: " + snapshot.data.toString());
+        print("Snapshot is requesting: " + snapshot.data.toString());
+        return new RoundedButton(
+            buttonName: "Confirmar",
+            width: screenSize.width,
+            height: 50.0,
+            bottomMargin: 10.0,
+            borderWidth: 1.0,
+            onTap: snapshot.hasData ? bloc.signUp : null);
+      },
+    );
+  }
+
+  void _showDialog(String message, context) {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Erro"),
+          content: new Text(message),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

@@ -8,6 +8,7 @@ dependencies:
   firebase_auth: ^0.5.10
   cloud_firestore: ^0.9.7
   firebase_storage: ^2.1.0+1
+  rxdart: ^0.21.0
   #audioplayers:
   local_notifications: ^0.0.7
 

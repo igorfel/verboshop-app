@@ -5,6 +5,7 @@ import 'package:verboshop/pages/Home/index.dart';
 import 'package:verboshop/theme/style.dart';
 
 import 'blocs/blocProvider.dart';
+import 'blocs/authBloc.dart';
 
 class Routes {
   var routes = <String, WidgetBuilder>{
@@ -14,21 +15,13 @@ class Routes {
   };
 
   Routes() {
-    runApp(BlocProvider<ApplicationBloc>(
-      bloc: ApplicationBloc(),
-      child: BlocProvider<>()
-      );
-  }
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Verboshop",
-      home: new HomePage(),
-      theme: appTheme,
-      routes: routes,
-    )
+    runApp(BlocProvider<AuthBloc>(
+        bloc: AuthBloc(),
+        child: MaterialApp(
+          title: "Verboshop",
+          home: new LoginPage(),
+          theme: appTheme,
+          routes: routes,
+        )));
   }
 }

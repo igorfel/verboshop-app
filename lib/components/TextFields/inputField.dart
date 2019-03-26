@@ -3,19 +3,20 @@ import 'package:flutter/material.dart';
 class InputField extends StatelessWidget {
   IconData icon;
   String hintText;
+  String errorText;
   TextInputType textInputType;
   Color textFieldColor, iconColor;
   bool obscureText;
   double bottomMargin;
   TextStyle textStyle, hintStyle;
-  var validateFunction;
-  var onSaved;
+  var onChanged;
   Key key;
 
   //passing props in the Constructor.
   InputField(
       {this.key,
       this.hintText,
+      this.errorText,
       this.obscureText,
       this.textInputType,
       this.textFieldColor,
@@ -23,8 +24,7 @@ class InputField extends StatelessWidget {
       this.iconColor,
       this.bottomMargin,
       this.textStyle,
-      this.validateFunction,
-      this.onSaved,
+      this.onChanged,
       this.hintStyle});
 
   @override
@@ -42,17 +42,16 @@ class InputField extends StatelessWidget {
                   color: iconColor,
                 ),
                 new Flexible(
-                  child: new TextFormField(
+                  child: new TextField(
                     style: textStyle,
                     key: key,
                     obscureText: obscureText,
                     keyboardType: textInputType,
-                    validator: validateFunction,
-                    onSaved: onSaved,
+                    onChanged: onChanged,
                     decoration: new InputDecoration(
-                      hintText: hintText,
-                      hintStyle: hintStyle,
-                    ),
+                        hintText: hintText,
+                        hintStyle: hintStyle,
+                        errorText: errorText),
                   ),
                 ),
               ],
