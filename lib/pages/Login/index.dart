@@ -8,6 +8,9 @@ import 'package:verboshop/components/Buttons/roundedButton.dart';
 import 'package:verboshop/services/validations.dart';
 import 'package:verboshop/services/authentication.dart';
 
+import 'package:verboshop/blocs/blocProvider.dart';
+import 'package:verboshop/blocs/authBloc.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({Key key}) : super(key: key);
 
@@ -30,55 +33,19 @@ class LoginPageState extends State<LoginPage> {
     print("button clicked");
   }
 
-  onPressed(String routeName) {
+  navigateTo(String routeName) {
     Navigator.of(context).pushNamed(routeName);
   }
 
   void showInSnackBar(String value) {
-    _scaffoldKey.currentState
-        .showSnackBar(new SnackBar(content: new Text(value)));
-  }
-
-  void _handleSubmitted() {
-    final FormState form = formKey.currentState;
-
-    _toggleHandler();
-
-    if (!form.validate()) {
-      autovalidate = true; // Start validating on every change.
-      _toggleHandler();
-      showInSnackBar('Por favor, corrija os erros antes de prosseguir.');
-    } else {
-      form.save();
-      userAuth.verifyUser(user).then((onValue) {
-        if (onValue == "Login Successfull") {
-          Navigator.pushReplacementNamed(context, "/HomePage");
-        } else {
-          showInSnackBar(onValue);
-        }
-      }).catchError((e) {
-        showInSnackBar(e.message);
-      }).whenComplete(() {
-        _toggleHandler();
-      });
-    }
-  }
-
-  void _toggleHandler() {
-    setState(() {
-      if (isHandlingLogin)
-        isHandlingLogin = false;
-      else
-        isHandlingLogin = true;
-    });
+    _scaffoldKey.currentState.showSnackBar(
+        new SnackBar(content: new Text(value ?? "Erro desconhecido")));
   }
 
   @override
   Widget build(BuildContext context) {
-    this.context = context;
-    final Size screenSize = MediaQuery.of(context).size;
-    //print(context.widget.toString());
-    Validations validations = new Validations();
+    final AuthBloc bloc = BlocProvider.of<AuthBloc>(context);
+    Size screenSize = MediaQuery.of(context).size;
     return new Scaffold(
         key: _scaffoldKey,
         body: new SingleChildScrollView(
@@ -110,57 +77,19 @@ class LoginPageState extends State<LoginPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        new Form(
-                          key: formKey,
-                          autovalidate: autovalidate,
-                          child: new Column(
-                            children: <Widget>[
-                              new InputField(
-                                hintText: "Usuário",
-                                obscureText: false,
-                                textInputType: TextInputType.emailAddress,
-                                textStyle: textStyle,
-                                //textFieldColor: Colors.white,
-                                icon: Icons.mail_outline,
-                                iconColor: Colors.white,
-                                bottomMargin: 20.0,
-                              ),
-                              new InputField(
-                                hintText: "Senha",
-                                obscureText: true,
-                                textInputType: TextInputType.text,
-                                textStyle: textStyle,
-                                // textFieldColor: textFieldColor,
-                                icon: Icons.lock_open,
-                                iconColor: Colors.white,
-                                bottomMargin: 30.0,
-                              ),
-                              (isHandlingLogin)
-                                  ? new CircularProgressIndicator(
-                                      value: null,
-                                      strokeWidth: 4.0,
-                                      valueColor:
-                                          new AlwaysStoppedAnimation<Color>(
-                                              primaryColor),
-                                    )
-                                  : new RoundedButton(
-                                      buttonName: "Entrar",
-                                      onTap: _handleSubmitted,
-                                      width: screenSize.width,
-                                      height: 50.0,
-                                      bottomMargin: 10.0,
-                                      borderWidth: 0.0,
-                                      buttonColor: primaryColor,
-                                    ),
-                            ],
-                          ),
+                        new Column(
+                          children: <Widget>[
+                            usernameField(bloc),
+                            passwordField(bloc),
+                            submitButton(bloc, screenSize),
+                          ],
                         ),
                         new Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             new TextButton(
                                 buttonName: "Criar conta",
-                                onPressed: () => onPressed("/SignUp"),
+                                onPressed: () => navigateTo("/SignUp"),
                                 buttonTextStyle: buttonTextStyle),
                             new TextButton(
                                 buttonName: "Informações",
@@ -174,5 +103,85 @@ class LoginPageState extends State<LoginPage> {
                 ],
               ),
             )));
+  }
+
+  Widget usernameField(bloc) {
+    return StreamBuilder(
+      stream: bloc.username,
+      builder: (context, snapshot) {
+        return InputField(
+            hintText: "Usuário",
+            obscureText: false,
+            textInputType: TextInputType.text,
+            textStyle: textStyle,
+            icon: Icons.mail_outline,
+            iconColor: Colors.white,
+            bottomMargin: 20.0,
+            onChanged: bloc.changeUsername,
+            errorText: snapshot.error);
+      },
+    );
+  }
+
+  Widget passwordField(bloc) {
+    return StreamBuilder(
+        stream: bloc.password,
+        builder: (context, snapshot) {
+          return InputField(
+              hintText: "Senha",
+              obscureText: true,
+              textInputType: TextInputType.text,
+              textStyle: textStyle,
+              icon: Icons.lock_open,
+              iconColor: Colors.white,
+              bottomMargin: 30.0,
+              onChanged: bloc.changePassword,
+              errorText: snapshot.error);
+        });
+  }
+
+  Widget submitButton(bloc, screenSize) {
+    return StreamBuilder(
+        stream: bloc.submitValidAccount,
+        builder: (context, snapshot) {
+          bool disabled =
+              snapshot.hasData && snapshot.data['hasAccount'] ? false : true;
+
+          if (snapshot.hasData && snapshot.data) {
+            Navigator.pushReplacementNamed(context, "/HomePage");
+          } else if (snapshot.hasData && !snapshot.data) {
+            isHandlingLogin = false;
+          }
+          return (isHandlingLogin)
+              ? CircularProgressIndicator(
+                  value: null,
+                  strokeWidth: 4.0,
+                  valueColor: new AlwaysStoppedAnimation<Color>(primaryColor),
+                )
+              : RoundedButton(
+                  buttonName: "Entrar",
+                  width: screenSize.width,
+                  height: 50.0,
+                  bottomMargin: 10.0,
+                  borderWidth: 0.0,
+                  textColor: disabled ? Colors.grey : Colors.white,
+                  buttonColor: disabled ? disabledPrimaryColor : primaryColor,
+                  onTap: disabled ? () => _handleSubmitted(bloc) : null);
+        });
+  }
+
+  void _handleSubmitted(bloc) {
+    isHandlingLogin = true;
+
+    bloc.signIn();
+  }
+
+  void _toggleHandler() {
+    setState(() {
+      if (isHandlingLogin)
+        isHandlingLogin = false;
+      else
+        isHandlingLogin = true;
+    });
   }
 }

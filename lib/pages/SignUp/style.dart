@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 TextStyle headingStyle = new TextStyle(
-  color: Colors.redAccent,
+  color: Colors.red[900],
   fontSize: 22.0,
   fontWeight: FontWeight.bold,
 );

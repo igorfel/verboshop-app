@@ -9,21 +9,20 @@ class RoundedButton extends StatelessWidget {
   final double bottomMargin;
   final double borderWidth;
   final Color buttonColor;
-
-  final TextStyle textStyle = const TextStyle(
-      color: const Color(0XFFFFFFFF),
-      fontSize: 16.0,
-      fontWeight: FontWeight.bold);
+  final Color borderColor;
+  final Color textColor;
 
   //passing props in react style
   RoundedButton(
-      {this.buttonName,
+      {@required this.buttonName,
       this.onTap,
       this.height,
       this.bottomMargin,
       this.borderWidth,
       this.width,
-      this.buttonColor});
+      this.buttonColor,
+      this.borderColor,
+      this.textColor});
 
   @override
   Widget build(BuildContext context) {
@@ -31,17 +30,20 @@ class RoundedButton extends StatelessWidget {
       return (new InkWell(
         onTap: onTap,
         child: new Container(
-          width: width,
-          height: height,
+          width: width ?? 130,
+          height: height ?? 50,
           margin: new EdgeInsets.only(bottom: bottomMargin),
           alignment: FractionalOffset.center,
           decoration: new BoxDecoration(
               color: buttonColor,
               borderRadius: new BorderRadius.all(const Radius.circular(30.0)),
               border: new Border.all(
-                  color: const Color.fromRGBO(221, 221, 221, 1.0),
-                  width: borderWidth)),
-          child: new Text(buttonName, style: textStyle),
+                  color: this.borderColor ?? Colors.white, width: borderWidth)),
+          child: new Text(buttonName,
+              style: new TextStyle(
+                  color: this.textColor ?? Colors.white,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold)),
         ),
       ));
     else
@@ -56,7 +58,11 @@ class RoundedButton extends StatelessWidget {
             color: buttonColor,
             borderRadius: new BorderRadius.all(const Radius.circular(30.0)),
           ),
-          child: new Text(buttonName, style: textStyle),
+          child: new Text(buttonName,
+              style: new TextStyle(
+                  color: this.textColor ?? Colors.white,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold)),
         ),
       ));
   }

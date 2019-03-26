@@ -1,16 +1,9 @@
 import 'dart:async';
-import '../consts.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Validators {
   final checkUsername = StreamTransformer<String, String>.fromHandlers(
       handleData: (username, sink) async {
     if (username.length > 5) {
-      // Firestore database = Firestore.instance;
-      // DocumentSnapshot dbUserInfo =
-      //     await database.collection(Consts.USER_DB).document(username).get();
-
-      // print(dbUserInfo.exists);
       sink.add(username);
     } else {
       sink.addError('Nome de usuário inválido');

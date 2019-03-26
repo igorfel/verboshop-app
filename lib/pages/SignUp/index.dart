@@ -2,8 +2,6 @@ import 'style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:verboshop/theme/style.dart';
-import 'package:verboshop/services/validations.dart';
-import 'package:verboshop/services/authentication.dart';
 import 'package:verboshop/components/Buttons/textButton.dart';
 import 'package:verboshop/components/Buttons/roundedButton.dart';
 import 'package:verboshop/components/TextFields/inputField.dart';
@@ -99,7 +97,6 @@ class SignUpPageState extends State<SignUpPage> {
             obscureText: false,
             textInputType: TextInputType.text,
             textStyle: textStyle,
-            textFieldColor: textFieldColor,
             icon: Icons.person_outline,
             iconColor: Colors.white,
             bottomMargin: 20.0,
@@ -118,7 +115,6 @@ class SignUpPageState extends State<SignUpPage> {
             obscureText: false,
             textInputType: TextInputType.emailAddress,
             textStyle: textStyle,
-            textFieldColor: textFieldColor,
             icon: Icons.mail_outline,
             iconColor: Colors.white,
             bottomMargin: 20.0,
@@ -137,7 +133,6 @@ class SignUpPageState extends State<SignUpPage> {
             obscureText: true,
             textInputType: TextInputType.text,
             textStyle: textStyle,
-            textFieldColor: textFieldColor,
             icon: Icons.lock_open,
             iconColor: Colors.white,
             bottomMargin: 40.0,
@@ -149,17 +144,19 @@ class SignUpPageState extends State<SignUpPage> {
 
   Widget submitButton(bloc, screenSize) {
     return StreamBuilder(
-      stream: bloc.submitValidAccount,
+      stream: bloc.submitValidNewAccount,
       builder: (context, snapshot) {
-        print("Snapshot has account: " + snapshot.data.toString());
-        print("Snapshot is requesting: " + snapshot.data.toString());
+        bool disabled =
+            snapshot.hasData && snapshot.data['hasAccount'] ? false : true;
         return new RoundedButton(
             buttonName: "Confirmar",
             width: screenSize.width,
             height: 50.0,
             bottomMargin: 10.0,
             borderWidth: 1.0,
-            onTap: snapshot.hasData ? bloc.signUp : null);
+            borderColor: disabled ? Colors.grey : Colors.white,
+            textColor: disabled ? Colors.grey : Colors.white,
+            onTap: disabled ? bloc.signUp : null);
       },
     );
   }
