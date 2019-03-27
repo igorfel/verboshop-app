@@ -30,7 +30,7 @@ class LoginPageState extends State<LoginPage> {
   Validations validations = new Validations();
 
   _onPressed() {
-    print("button clicked");
+    print('button clicked');
   }
 
   navigateTo(String routeName) {
@@ -39,7 +39,7 @@ class LoginPageState extends State<LoginPage> {
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState.showSnackBar(
-        new SnackBar(content: new Text(value ?? "Erro desconhecido")));
+        new SnackBar(content: new Text(value ?? 'Erro desconhecido')));
   }
 
   @override
@@ -88,12 +88,12 @@ class LoginPageState extends State<LoginPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             new TextButton(
-                                buttonName: "Criar conta",
+                                buttonName: 'Criar conta',
                                 onPressed: () =>
-                                    Navigator.of(context).pushNamed("/SignUp"),
+                                    Navigator.of(context).pushNamed('/SignUp'),
                                 buttonTextStyle: buttonTextStyle),
                             new TextButton(
-                                buttonName: "Informações",
+                                buttonName: 'Informações',
                                 onPressed: _onPressed,
                                 buttonTextStyle: buttonTextStyle)
                           ],
@@ -111,7 +111,7 @@ class LoginPageState extends State<LoginPage> {
       stream: bloc.username,
       builder: (context, snapshot) {
         return InputField(
-            hintText: "Usuário",
+            hintText: 'Usuário',
             obscureText: false,
             textStyle: textStyle,
             icon: Icons.person_outline,
@@ -128,7 +128,7 @@ class LoginPageState extends State<LoginPage> {
         stream: bloc.password,
         builder: (context, snapshot) {
           return InputField(
-              hintText: "Senha",
+              hintText: 'Senha',
               obscureText: true,
               textInputType: TextInputType.text,
               textStyle: textStyle,
@@ -147,11 +147,11 @@ class LoginPageState extends State<LoginPage> {
           bool enabled = snapshot.data == true ? true : false;
 
           return StreamBuilder(
-              stream: bloc.validAccount,
+              stream: bloc.validLogin,
               builder: (context, snapshot) {
                 if (snapshot.hasData && snapshot.data['valid'] == true) {
-                  Future.delayed(const Duration(milliseconds: 500), () {
-                    Navigator.pushReplacementNamed(context, "/HomePage");
+                  Future.delayed(const Duration(milliseconds: 100), () {
+                    Navigator.pushReplacementNamed(context, '/HomePage');
                   });
                 }
                 return (snapshot.hasData && snapshot.data['requesting'] == true)
@@ -162,7 +162,7 @@ class LoginPageState extends State<LoginPage> {
                             new AlwaysStoppedAnimation<Color>(primaryColor),
                       )
                     : RoundedButton(
-                        buttonName: "Entrar",
+                        buttonName: 'Entrar',
                         width: screenSize.width,
                         height: 50.0,
                         bottomMargin: 10.0,

@@ -18,7 +18,7 @@ class AuthBloc extends BlocBase with Validators {
   final _username = BehaviorSubject<String>();
   final _email = BehaviorSubject<String>();
   final _password = BehaviorSubject<String>();
-  final _validAccount = BehaviorSubject();
+  final _validLogin = BehaviorSubject();
   //StreamSink<bool> _requesting = ;
 
   Stream<String> get username => _username.stream.transform(checkUsername);
@@ -29,7 +29,7 @@ class AuthBloc extends BlocBase with Validators {
   Stream get submitValidAccount =>
       Observable.combineLatest2(username, password, (u, p) => true);
 
-  Stream get validAccount => _validAccount.stream;
+  Stream get validLogin => _validLogin.stream;
 
   Function(String) get changeUsername => _username.sink.add;
   Function(String) get changeEmail => _email.sink.add;
@@ -42,7 +42,7 @@ class AuthBloc extends BlocBase with Validators {
   }
 
   Future signIn() async {
-    _validAccount.add({'requesting': true});
+    _validLogin.add({'requesting': true});
 
     SignInInfo loginInfo =
         SignInInfo(user: this._username.value, pass: this._password.value);
@@ -58,19 +58,22 @@ class AuthBloc extends BlocBase with Validators {
       this.user = await auth
           .signInWithEmailAndPassword(
               email: dbUserInfo['email'], password: loginInfo.pass)
-          .catchError((e) => _password.addError("Senha inválida"));
+          .catchError((e) => _password.addError('Senha inválida'));
 
-      if (this.user != null)
-        _validAccount.add({'valid': true});
-      else
-        _validAccount.add({'valid': false});
+      if (this.user != null) {
+        _validLogin.add({'requesting': false, 'valid': true});
+        erasePassword();
+      } else
+        _validLogin.add({'valid': false});
     } else {
       _username.addError("Usuário não encontrado");
-      _validAccount.add({'valid': false});
+      _validLogin.add({'valid': false});
     }
   }
 
   Future signUp() async {
+    _validLogin.add({'requesting': true});
+
     FirebaseUser newUser;
     SignUpInfo signUpInfo = SignUpInfo(
         user: this._username.value,
@@ -83,6 +86,8 @@ class AuthBloc extends BlocBase with Validators {
           email: signUpInfo.email, password: signUpInfo.password);
     } catch (error) {
       _email.addError('Email já registrado');
+      _validLogin.add({'requesting': false});
+
       return;
     }
     // after registering the new user add his info to the database
@@ -93,13 +98,23 @@ class AuthBloc extends BlocBase with Validators {
       'isPremium': false,
       'created_at': FieldValue.serverTimestamp()
     });
+
+    _validLogin.add({'requesting': false, 'valid': true});
   }
 
   //To sign out the current User
   Future signOut() async {
-    await auth.signOut();
-
-    // TODO: trigger sign out event
+    await auth.signOut().then((onValue) {
+      _validLogin.add({'requesting': false, 'valid': false, 'signOut': true});
+      erasePassword();
+    }).catchError((e) {
+      _validLogin.add({
+        'requesting': false,
+        'valid': false,
+        'signOut': false,
+        'message': 'Erro ao sair'
+      });
+    });
   }
 
   @override
@@ -107,6 +122,10 @@ class AuthBloc extends BlocBase with Validators {
     _username.close();
     _email.close();
     _password.close();
-    _validAccount.close();
+    _validLogin.close();
+  }
+
+  void erasePassword() {
+    _password.sink.add('');
   }
 }

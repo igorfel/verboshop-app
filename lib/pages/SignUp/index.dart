@@ -49,7 +49,7 @@ class SignUpPageState extends State<SignUpPage> {
                           height: screenSize.height / 4,
                         )),
                     new Text(
-                      "CRIAR NOVA CONTA",
+                      'CRIAR NOVA CONTA',
                       textAlign: TextAlign.center,
                       style: headingStyle,
                     )
@@ -68,7 +68,7 @@ class SignUpPageState extends State<SignUpPage> {
                         ],
                       ),
                       new TextButton(
-                        buttonName: "Termos e Condições",
+                        buttonName: 'Termos e Condições',
                         onPressed: () {},
                         buttonTextStyle: buttonTextStyle,
                       )
@@ -86,7 +86,7 @@ class SignUpPageState extends State<SignUpPage> {
       stream: bloc.username,
       builder: (context, snapshot) {
         return InputField(
-            hintText: "Usuário",
+            hintText: 'Usuário',
             obscureText: false,
             textInputType: TextInputType.text,
             textStyle: textStyle,
@@ -104,7 +104,7 @@ class SignUpPageState extends State<SignUpPage> {
       stream: bloc.email,
       builder: (context, snapshot) {
         return new InputField(
-            hintText: "Email",
+            hintText: 'Email',
             obscureText: false,
             textInputType: TextInputType.emailAddress,
             textStyle: textStyle,
@@ -122,7 +122,7 @@ class SignUpPageState extends State<SignUpPage> {
       stream: bloc.password,
       builder: (context, snapshot) {
         return new InputField(
-            hintText: "Senha",
+            hintText: 'Senha',
             obscureText: true,
             textInputType: TextInputType.text,
             textStyle: textStyle,
@@ -139,16 +139,33 @@ class SignUpPageState extends State<SignUpPage> {
     return StreamBuilder(
       stream: bloc.submitValidNewAccount,
       builder: (context, snapshot) {
-        bool disabled = snapshot.hasData && snapshot.data ? false : true;
-        return new RoundedButton(
-            buttonName: "Confirmar",
-            width: screenSize.width,
-            height: 50.0,
-            bottomMargin: 10.0,
-            borderWidth: 1.0,
-            borderColor: disabled ? Colors.grey : Colors.white,
-            textColor: disabled ? Colors.grey : Colors.white,
-            onTap: !disabled ? bloc.signUp : null);
+        bool enabled = snapshot.data == true ? true : false;
+
+        return StreamBuilder(
+            stream: bloc.validLogin,
+            builder: (context, snapshot) {
+              if (snapshot.hasData && snapshot.data['valid'] == true) {
+                Future.delayed(const Duration(milliseconds: 500), () {
+                  Navigator.pop(context);
+                });
+              }
+              return (snapshot.hasData && snapshot.data['requesting'] == true)
+                  ? CircularProgressIndicator(
+                      value: null,
+                      strokeWidth: 4.0,
+                      valueColor:
+                          new AlwaysStoppedAnimation<Color>(primaryColor),
+                    )
+                  : RoundedButton(
+                      buttonName: 'Confirmar',
+                      width: screenSize.width,
+                      height: 50.0,
+                      bottomMargin: 10.0,
+                      borderWidth: 1.0,
+                      borderColor: enabled ? Colors.grey : Colors.white,
+                      textColor: enabled ? Colors.grey : Colors.white,
+                      onTap: enabled ? bloc.signUp : null);
+            });
       },
     );
   }

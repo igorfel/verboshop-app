@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import "package:flutter/material.dart";
-import "style.dart";
-import 'package:verboshop/services/authentication.dart';
-import 'package:verboshop/services/audiosManager.dart';
+import 'package:verboshop/blocs/blocProvider.dart';
+import 'package:verboshop/blocs/authBloc.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
@@ -15,14 +14,6 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool showPlayIcon = true;
-  // int currentPlaying = -1, lastPlayingIndex = -1;
-  // Duration lastDuration, lastPosition;
-  // String currentTitle, currentContent;
-
-  UserAuth userAuth = new UserAuth();
-  //AudiosManager audiosManager = new AudiosManager();
-
-  // LocalNotifications localNotifications;
 
   int _selectedIndex = 1;
   final _widgetOptions = [
@@ -41,28 +32,19 @@ class HomePageState extends State<HomePage> {
   }
 
   void _handleSignOut() {
-    userAuth.signOut().then((onValue) {
-      if (onValue == "Logout Successfull") {
-        //audiosManager.stop();
-        //_cancelNotification();
-        Navigator.pushNamedAndRemoveUntil(context, "/Login", (_) => false);
-      } else {
-        showInSnackBar(onValue);
-      }
-    }).catchError((e) {
-      showInSnackBar(e.message);
+    final AuthBloc bloc = BlocProvider.of<AuthBloc>(context);
+    bloc.signOut();
+
+    bloc.validLogin.listen((data) {
+      if (data['signOut'] == true)
+        Navigator.pushNamedAndRemoveUntil(context, '/Login', (_) => false);
+      else
+        showInSnackBar(data['message']);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // audiosManager.audioPlayer.completionHandler = () {
-    //   audiosManager.complete();
-
-    //   setState(() { showPlayIcon = true; });
-    // };
-
-    // TODO: implement build
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
