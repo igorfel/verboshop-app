@@ -144,23 +144,17 @@ class LoginPageState extends State<LoginPage> {
     return StreamBuilder(
         stream: bloc.submitValidAccount,
         builder: (context, snapshot) {
-          bool disabled =
-              snapshot.hasData && snapshot.data['hasAccount'] ? false : true;
+          bool enabled = snapshot.data == true ? true : false;
 
-          // if (snapshot.hasData && snapshot.data['hasAccount']) {
-          //   Navigator.pushReplacementNamed(context, "/HomePage");
-          // } else
-          // if (snapshot.hasData && !snapshot.data['hasAccount']) {
-          //   isHandlingLogin = false;
-          // }
           return StreamBuilder(
               stream: bloc.validAccount,
               builder: (context, snapshot) {
-                print("Login: " +
-                    snapshot.toString() +
-                    " - " +
-                    disabled.toString());
-                return (snapshot.hasData)
+                if (snapshot.hasData && snapshot.data['valid'] == true) {
+                  Future.delayed(const Duration(milliseconds: 500), () {
+                    Navigator.pushReplacementNamed(context, "/HomePage");
+                  });
+                }
+                return (snapshot.hasData && snapshot.data['requesting'] == true)
                     ? CircularProgressIndicator(
                         value: null,
                         strokeWidth: 4.0,
@@ -173,26 +167,11 @@ class LoginPageState extends State<LoginPage> {
                         height: 50.0,
                         bottomMargin: 10.0,
                         borderWidth: 0.0,
-                        textColor: disabled ? Colors.grey : Colors.white,
+                        textColor: enabled ? Colors.white : Colors.grey,
                         buttonColor:
-                            disabled ? disabledPrimaryColor : primaryColor,
-                        onTap: bloc.signIn);
+                            enabled ? primaryColor : disabledPrimaryColor,
+                        onTap: enabled ? bloc.signIn : null);
               });
         });
-  }
-
-  void _handleSubmitted(bloc) {
-    isHandlingLogin = true;
-
-    bloc.signIn();
-  }
-
-  void _toggleHandler() {
-    setState(() {
-      if (isHandlingLogin)
-        isHandlingLogin = false;
-      else
-        isHandlingLogin = true;
-    });
   }
 }

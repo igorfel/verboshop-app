@@ -18,18 +18,18 @@ class AuthBloc extends BlocBase with Validators {
   final _username = BehaviorSubject<String>();
   final _email = BehaviorSubject<String>();
   final _password = BehaviorSubject<String>();
-  final _validAccount = BehaviorSubject<bool>();
+  final _validAccount = BehaviorSubject();
   //StreamSink<bool> _requesting = ;
 
   Stream<String> get username => _username.stream.transform(checkUsername);
   Stream<String> get email => _email.stream.transform(validateEmail);
   Stream<String> get password => _password.stream.transform(validatePassword);
-  Stream get submitValidNewAccount => Observable.combineLatest3(
-      username, email, password, (u, e, p) => {'hasAccount': true});
-  Stream get submitValidAccount => Observable.combineLatest2(
-      username, password, (u, p) => {'hasAccount': true});
+  Stream get submitValidNewAccount =>
+      Observable.combineLatest3(username, email, password, (u, e, p) => true);
+  Stream get submitValidAccount =>
+      Observable.combineLatest2(username, password, (u, p) => true);
 
-  Stream<bool> get validAccount => _validAccount.stream;
+  Stream get validAccount => _validAccount.stream;
 
   Function(String) get changeUsername => _username.sink.add;
   Function(String) get changeEmail => _email.sink.add;
@@ -42,6 +42,8 @@ class AuthBloc extends BlocBase with Validators {
   }
 
   Future signIn() async {
+    _validAccount.add({'requesting': true});
+
     SignInInfo loginInfo =
         SignInInfo(user: this._username.value, pass: this._password.value);
 
@@ -50,24 +52,22 @@ class AuthBloc extends BlocBase with Validators {
         .collection(Consts.USER_DB)
         .document(loginInfo.user)
         .get();
-    print("SignIN: " + dbUserInfo.toString());
-    if (dbUserInfo.exists) {
-      print('User info for sign in: ' + dbUserInfo.toString());
-      // Login user with email and password
-      this.user = await auth.signInWithEmailAndPassword(
-          email: dbUserInfo['email'], password: loginInfo.pass);
 
-      if (this.user == null) {
-        _password.addError("Usuário ou senha inválidos");
-      } else {
-        _validAccount.add(true);
-        return;
-      }
+    if (dbUserInfo.exists) {
+      // Login user with email and password
+      this.user = await auth
+          .signInWithEmailAndPassword(
+              email: dbUserInfo['email'], password: loginInfo.pass)
+          .catchError((e) => _password.addError("Senha inválida"));
+
+      if (this.user != null)
+        _validAccount.add({'valid': true});
+      else
+        _validAccount.add({'valid': false});
     } else {
       _username.addError("Usuário não encontrado");
+      _validAccount.add({'valid': false});
     }
-
-    _validAccount.add(false);
   }
 
   Future signUp() async {
@@ -101,10 +101,6 @@ class AuthBloc extends BlocBase with Validators {
 
     // TODO: trigger sign out event
   }
-
-  // Future checkUsername(String username) async {
-  // 	await database.collection(USER_DB);
-  // }
 
   @override
   void dispose() {

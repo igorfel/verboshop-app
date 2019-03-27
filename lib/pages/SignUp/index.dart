@@ -65,13 +65,6 @@ class SignUpPageState extends State<SignUpPage> {
                           emailField(bloc),
                           passwordField(bloc),
                           submitButton(bloc, screenSize),
-                          StreamBuilder(
-                              stream: bloc.validAccount,
-                              builder: (context, snapshot) {
-                                if (snapshot.hasError)
-                                  _showDialog(snapshot.error, context);
-                                return new Container();
-                              })
                         ],
                       ),
                       new TextButton(
@@ -146,8 +139,7 @@ class SignUpPageState extends State<SignUpPage> {
     return StreamBuilder(
       stream: bloc.submitValidNewAccount,
       builder: (context, snapshot) {
-        bool disabled =
-            snapshot.hasData && snapshot.data['hasAccount'] ? false : true;
+        bool disabled = snapshot.hasData && snapshot.data ? false : true;
         return new RoundedButton(
             buttonName: "Confirmar",
             width: screenSize.width,
@@ -156,30 +148,7 @@ class SignUpPageState extends State<SignUpPage> {
             borderWidth: 1.0,
             borderColor: disabled ? Colors.grey : Colors.white,
             textColor: disabled ? Colors.grey : Colors.white,
-            onTap: disabled ? bloc.signUp : null);
-      },
-    );
-  }
-
-  void _showDialog(String message, context) {
-    // flutter defined function
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: new Text("Erro"),
-          content: new Text(message),
-          actions: <Widget>[
-            // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text("Close"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
+            onTap: !disabled ? bloc.signUp : null);
       },
     );
   }
