@@ -50,7 +50,7 @@ class AuthBloc extends BlocBase with Validators {
         .collection(Consts.USER_DB)
         .document(loginInfo.user)
         .get();
-
+    print("SignIN: " + dbUserInfo.toString());
     if (dbUserInfo.exists) {
       print('User info for sign in: ' + dbUserInfo.toString());
       // Login user with email and password

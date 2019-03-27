@@ -89,7 +89,8 @@ class LoginPageState extends State<LoginPage> {
                           children: <Widget>[
                             new TextButton(
                                 buttonName: "Criar conta",
-                                onPressed: () => navigateTo("/SignUp"),
+                                onPressed: () =>
+                                    Navigator.of(context).pushNamed("/SignUp"),
                                 buttonTextStyle: buttonTextStyle),
                             new TextButton(
                                 buttonName: "Informações",
@@ -112,9 +113,8 @@ class LoginPageState extends State<LoginPage> {
         return InputField(
             hintText: "Usuário",
             obscureText: false,
-            textInputType: TextInputType.text,
             textStyle: textStyle,
-            icon: Icons.mail_outline,
+            icon: Icons.person_outline,
             iconColor: Colors.white,
             bottomMargin: 20.0,
             onChanged: bloc.changeUsername,
@@ -147,26 +147,37 @@ class LoginPageState extends State<LoginPage> {
           bool disabled =
               snapshot.hasData && snapshot.data['hasAccount'] ? false : true;
 
-          if (snapshot.hasData && snapshot.data) {
-            Navigator.pushReplacementNamed(context, "/HomePage");
-          } else if (snapshot.hasData && !snapshot.data) {
-            isHandlingLogin = false;
-          }
-          return (isHandlingLogin)
-              ? CircularProgressIndicator(
-                  value: null,
-                  strokeWidth: 4.0,
-                  valueColor: new AlwaysStoppedAnimation<Color>(primaryColor),
-                )
-              : RoundedButton(
-                  buttonName: "Entrar",
-                  width: screenSize.width,
-                  height: 50.0,
-                  bottomMargin: 10.0,
-                  borderWidth: 0.0,
-                  textColor: disabled ? Colors.grey : Colors.white,
-                  buttonColor: disabled ? disabledPrimaryColor : primaryColor,
-                  onTap: disabled ? () => _handleSubmitted(bloc) : null);
+          // if (snapshot.hasData && snapshot.data['hasAccount']) {
+          //   Navigator.pushReplacementNamed(context, "/HomePage");
+          // } else
+          // if (snapshot.hasData && !snapshot.data['hasAccount']) {
+          //   isHandlingLogin = false;
+          // }
+          return StreamBuilder(
+              stream: bloc.validAccount,
+              builder: (context, snapshot) {
+                print("Login: " +
+                    snapshot.toString() +
+                    " - " +
+                    disabled.toString());
+                return (snapshot.hasData)
+                    ? CircularProgressIndicator(
+                        value: null,
+                        strokeWidth: 4.0,
+                        valueColor:
+                            new AlwaysStoppedAnimation<Color>(primaryColor),
+                      )
+                    : RoundedButton(
+                        buttonName: "Entrar",
+                        width: screenSize.width,
+                        height: 50.0,
+                        bottomMargin: 10.0,
+                        borderWidth: 0.0,
+                        textColor: disabled ? Colors.grey : Colors.white,
+                        buttonColor:
+                            disabled ? disabledPrimaryColor : primaryColor,
+                        onTap: bloc.signIn);
+              });
         });
   }
 
