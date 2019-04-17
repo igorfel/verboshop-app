@@ -18,7 +18,7 @@ ThemeData appTheme = new ThemeData(
 Color textFieldColor = const Color.fromRGBO(255, 255, 255, 0.1);
 
 Color primaryColor = const Color.fromRGBO(154, 41, 39, 1.0);
-Color disabledPrimaryColor = const Color.fromRGBO(77, 30, 30, 1.0);
+Color disabledPrimaryColor = const Color.fromRGBO(77, 30, 30, 0.8);
 
 TextStyle buttonTextStyle = const TextStyle(
     color: const Color.fromRGBO(255, 255, 255, 0.8),

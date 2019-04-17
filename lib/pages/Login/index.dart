@@ -51,12 +51,13 @@ class LoginPageState extends State<LoginPage> {
         body: new SingleChildScrollView(
             controller: scrollController,
             child: new Container(
+              height: screenSize.height,
               padding: new EdgeInsets.all(16.0),
               decoration: new BoxDecoration(image: backgroundImage),
               child: new Column(
                 children: <Widget>[
                   new Container(
-                    height: screenSize.height / 2,
+                    height: screenSize.height / 2.5,
                     child: new Column(
                       children: <Widget>[
                         new Hero(
@@ -64,7 +65,7 @@ class LoginPageState extends State<LoginPage> {
                             child: new Image(
                               image: logo,
                               width: (screenSize.width < 500)
-                                  ? 270.0
+                                  ? 170.0
                                   : (screenSize.width / 4) + 32.0,
                               height: screenSize.height / 4 + 80,
                             ))
@@ -72,15 +73,26 @@ class LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   new Container(
-                    height: screenSize.height / 2,
+                    //height: screenSize.height / 2,
                     child: new Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      // crossAxisAlignment: CrossAxisAlignment.center,
+                      // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         new Column(
                           children: <Widget>[
-                            usernameField(bloc),
-                            passwordField(bloc),
+                            Container(
+                              margin: EdgeInsets.only(bottom: 15),
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              decoration: BoxDecoration(
+                                  color: Color.fromRGBO(255, 255, 255, 0.5),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Column(
+                                children: <Widget>[
+                                  usernameField(bloc),
+                                  passwordField(bloc),
+                                ],
+                              ),
+                            ),
                             submitButton(bloc, screenSize),
                           ],
                         ),
