@@ -1,8 +1,17 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import "package:flutter/material.dart";
 import 'package:verboshop/blocs/blocProvider.dart';
 import 'package:verboshop/blocs/authBloc.dart';
+import 'package:audioplayers_with_rate/audioplayers.dart';
+import 'package:verboshop/pages/AudioList/audioList.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
+final AudioPlayer audioPlayer = new AudioPlayer();
+FirebaseStorage storage;
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
@@ -12,12 +21,36 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  final FirebaseApp _app = FirebaseApp.instance;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool showPlayIcon = true;
 
   int _selectedIndex = 1;
   final _widgetOptions = [
-    Text('Index 0: Home'),
+    // Container(
+    //     child: Column(
+    //   children: <Widget>[
+    //     Text('Index 0: Home'),
+    //     FlatButton(
+    //       child: Text('Play'),
+    //       onPressed: () async {
+    //         dynamic url = await storage
+    //             .ref()
+    //             .child('ministracoes')
+    //             .child(
+    //                 'Domingo Manhã - Puxando do invisível para o visível - Ap Sergio Pessoa.mp3')
+    //             .getDownloadURL();
+    //         print('URL-----------------------------------' + url.toString());
+    //         audioPlayer.play(url);
+    //       },
+    //     ),
+    //     FlatButton(
+    //       child: Text('Pause'),
+    //       onPressed: () => audioPlayer.pause(),
+    //     )
+    //   ],
+    // )),
+    AudioList(),
     Text('Index 1: Search'),
     Container(
       child: Column(
@@ -25,6 +58,23 @@ class HomePageState extends State<HomePage> {
       ),
     )
   ];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    storage = FirebaseStorage(
+        app: _app, storageBucket: 'gs://verboshop-app.appspot.com');
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+
+    audioPlayer.stop();
+  }
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState

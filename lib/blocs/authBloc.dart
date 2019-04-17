@@ -19,7 +19,6 @@ class AuthBloc extends BlocBase with Validators {
   final _email = BehaviorSubject<String>();
   final _password = BehaviorSubject<String>();
   final _validLogin = BehaviorSubject();
-  //StreamSink<bool> _requesting = ;
 
   Stream<String> get username => _username.stream.transform(checkUsername);
   Stream<String> get email => _email.stream.transform(validateEmail);
