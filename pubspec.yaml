@@ -11,6 +11,7 @@ dependencies:
   cloud_firestore: 
   firebase_auth: ^0.7.0
   audioplayers_with_rate:
+  fluttery_seekbar: ^0.0.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

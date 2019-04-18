@@ -1,8 +1,11 @@
-class Audio{
+class Audio {
   String title;
-  String minister;
+  String author;
   String date;
   String url;
 
-  Audio({this.title, this.minister, this.date, this.url});
+  Audio({this.title, this.author, this.date, this.url});
+
+  Audio.fromMap(Map<String, dynamic> data)
+      : this(title: data['title'], author: data['author'], url: data['url']);
 }

@@ -9,9 +9,7 @@ import 'package:verboshop/blocs/authBloc.dart';
 import 'package:audioplayers_with_rate/audioplayers.dart';
 import 'package:verboshop/pages/AudioList/audioList.dart';
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
 final AudioPlayer audioPlayer = new AudioPlayer();
-FirebaseStorage storage;
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
@@ -21,7 +19,6 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  final FirebaseApp _app = FirebaseApp.instance;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool showPlayIcon = true;
 
@@ -50,7 +47,7 @@ class HomePageState extends State<HomePage> {
     //     )
     //   ],
     // )),
-    AudioList(),
+    AudioList(audioPlayer),
     Text('Index 1: Search'),
     Container(
       child: Column(
@@ -58,15 +55,6 @@ class HomePageState extends State<HomePage> {
       ),
     )
   ];
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    storage = FirebaseStorage(
-        app: _app, storageBucket: 'gs://verboshop-app.appspot.com');
-  }
 
   @override
   void dispose() {
