@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:verboshop/pages/Login/index.dart';
-import 'package:verboshop/pages/SignUp/index.dart';
-import 'package:verboshop/pages/Home/index.dart';
+import 'package:verboshop/pages/Login/loginPage.dart';
+import 'package:verboshop/pages/SignUp/signUpPage.dart';
+import 'package:verboshop/pages/Home/homePage.dart';
 import 'package:verboshop/theme/style.dart';
 
 import 'blocs/blocProvider.dart';
