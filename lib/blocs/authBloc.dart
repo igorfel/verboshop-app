@@ -34,6 +34,8 @@ class AuthBloc extends BlocBase with Validators {
   Function(String) get changeEmail => _email.sink.add;
   Function(String) get changePassword => _password.sink.add;
 
+  get isPlaying => true == true;
+
   AuthBloc() {
     requesting = false;
     database = Firestore.instance;

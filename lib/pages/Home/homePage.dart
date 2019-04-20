@@ -1,10 +1,9 @@
 import "package:flutter/material.dart";
-import 'package:audioplayers_with_rate/audioplayers.dart';
+import 'package:verboshop/blocs/audioBloc.dart';
+import 'package:verboshop/blocs/blocProvider.dart';
 import 'package:verboshop/components/Lists/audioList.dart';
 import 'package:verboshop/pages/Account/account.dart';
 import 'package:verboshop/pages/Search/searchPage.dart';
-
-final AudioPlayer audioPlayer = new AudioPlayer();
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
@@ -14,29 +13,30 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  AudioBloc _audioBloc;
   bool showPlayIcon = true;
 
   int _selectedIndex = 1;
-  final _widgetOptions = [AudioList(audioPlayer), SearchPage(), AccountPage()];
 
   @override
-  void dispose() {
-    super.dispose();
+  void initState() {
+    super.initState();
 
-    audioPlayer.stop();
+    _audioBloc = new AudioBloc();
   }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      key: _scaffoldKey,
       appBar: new AppBar(
         title: new Text('VERBO STORE'),
         centerTitle: true,
       ),
       body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+        child: BlocProvider(
+            bloc: _audioBloc,
+            child: [AudioList(), SearchPage(), AccountPage()]
+                .elementAt(_selectedIndex)),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[

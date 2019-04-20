@@ -73,10 +73,7 @@ class LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   new Container(
-                    //height: screenSize.height / 2,
                     child: new Column(
-                      // crossAxisAlignment: CrossAxisAlignment.center,
-                      // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         new Column(
                           children: <Widget>[

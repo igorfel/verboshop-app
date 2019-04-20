@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:verboshop/blocs/audioBloc.dart';
 import 'package:verboshop/blocs/authBloc.dart';
 import 'package:verboshop/blocs/blocProvider.dart';
 
@@ -25,13 +26,16 @@ class AccountPage extends StatelessWidget {
   }
 
   void _handleSignOut(context) {
+    final AudioBloc audioBloc = BlocProvider.of<AudioBloc>(context);
     final AuthBloc bloc = BlocProvider.of<AuthBloc>(context);
+
     bloc.signOut();
 
     bloc.validLogin.listen((data) {
-      if (data['signOut'] == true)
+      if (data['signOut'] == true) {
+        audioBloc.stop();
         Navigator.pushNamedAndRemoveUntil(context, '/Login', (_) => false);
-      else
+      } else
         showInSnackBar(data['message']);
     });
   }

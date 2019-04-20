@@ -1,48 +1,27 @@
 import 'dart:math';
-
-import 'package:audioplayers_with_rate/audioplayers.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttery_seekbar/fluttery_seekbar.dart';
+import 'package:verboshop/blocs/audioBloc.dart';
+import 'package:verboshop/blocs/authBloc.dart';
+import 'package:verboshop/blocs/blocProvider.dart';
 import 'package:verboshop/models/audio.dart';
 import 'package:verboshop/theme/style.dart';
 
-enum PlayerState { stopped, playing, paused }
-
 class AudioPlayerPage extends StatefulWidget {
   final Audio _audioData;
-  final AudioPlayer _audioPlayer;
 
-  AudioPlayerPage(this._audioData, this._audioPlayer);
+  AudioPlayerPage(this._audioData);
 
   @override
-  _AudioPlayerState createState() =>
-      new _AudioPlayerState(_audioData, _audioPlayer);
+  _AudioPlayerState createState() => new _AudioPlayerState(_audioData);
 }
 
 class _AudioPlayerState extends State<AudioPlayerPage> {
-  final FirebaseApp _app = FirebaseApp.instance;
-  FirebaseStorage _storage;
   final Audio _audio;
-  final AudioPlayer _player;
-  PlayerState _playerState = PlayerState.stopped;
+
   double _thumbPercent = 0;
-  Duration _duration;
-  Duration _position;
 
-  get _isPlaying => _playerState == PlayerState.playing;
-  get _isPaused => _playerState == PlayerState.paused;
-
-  _AudioPlayerState(this._audio, this._player);
-
-  @override
-  void initState() {
-    super.initState();
-
-    _storage = FirebaseStorage(
-        app: _app, storageBucket: 'gs://verboshop-app.appspot.com');
-  }
+  _AudioPlayerState(this._audio);
 
   Widget _buildRadialSeekBar() {
     return RadialSeekBar(
@@ -66,6 +45,8 @@ class _AudioPlayerState extends State<AudioPlayerPage> {
 
   @override
   Widget build(BuildContext context) {
+    final AudioBloc audioBloc = BlocProvider.of<AudioBloc>(context);
+
     return new Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -178,31 +159,36 @@ class _AudioPlayerState extends State<AudioPlayerPage> {
                       ),
                     ),
                     Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        width: 92.0,
-                        height: 92.0,
-                        decoration: BoxDecoration(
-                            color: primaryColor, shape: BoxShape.circle),
-                        child: _isPlaying
-                            ? IconButton(
-                                icon: Icon(
-                                  Icons.pause,
-                                  size: 45.0,
-                                  color: Colors.white,
-                                ),
-                                onPressed: _pause,
-                              )
-                            : IconButton(
-                                icon: Icon(
-                                  Icons.play_arrow,
-                                  size: 45.0,
-                                  color: Colors.white,
-                                ),
-                                onPressed: _play,
-                              ),
-                      ),
-                    )
+                        alignment: Alignment.center,
+                        child: StreamBuilder(
+                          stream: audioBloc.isPlaying,
+                          builder: (context, snapshot) {
+                            return Container(
+                              width: 92.0,
+                              height: 92.0,
+                              decoration: BoxDecoration(
+                                  color: primaryColor, shape: BoxShape.circle),
+                              child: snapshot.hasData
+                                  ? IconButton(
+                                      icon: Icon(
+                                        Icons.pause,
+                                        size: 45.0,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: audioBloc.pause,
+                                    )
+                                  : IconButton(
+                                      icon: Icon(
+                                        Icons.play_arrow,
+                                        size: 45.0,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: () =>
+                                          audioBloc.play(_audio.url),
+                                    ),
+                            );
+                          },
+                        ))
                   ],
                 ),
               ),
@@ -255,30 +241,6 @@ class _AudioPlayerState extends State<AudioPlayerPage> {
             ],
           ),
         ));
-  }
-
-  Future<int> _play() async {
-    final playPosition = (_position != null &&
-            _duration != null &&
-            _position.inMilliseconds > 0 &&
-            _position.inMilliseconds < _duration.inMilliseconds)
-        ? _position
-        : null;
-    final url = await _storage
-        .ref()
-        .child('ministracoes')
-        .child(_audio.url)
-        .getDownloadURL();
-    final result =
-        await _player.play(url, position: playPosition ?? Duration.zero);
-    if (result == 1) setState(() => _playerState = PlayerState.playing);
-    return result;
-  }
-
-  Future<int> _pause() async {
-    final result = await _player.pause();
-    if (result == 1) setState(() => _playerState = PlayerState.paused);
-    return result;
   }
 }
 

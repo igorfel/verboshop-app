@@ -1,17 +1,14 @@
-import 'package:audioplayers_with_rate/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:verboshop/blocs/audioBloc.dart';
+import 'package:verboshop/blocs/blocProvider.dart';
 import 'package:verboshop/models/audio.dart';
 import 'package:verboshop/pages/AudioPlayer/audioPlayer.dart';
 
 class AudioList extends StatelessWidget {
-  final AudioPlayer _audioPlayer;
-
-  AudioList(this._audioPlayer);
-
   @override
   Widget build(BuildContext context) {
+    final AudioBloc audioBloc = BlocProvider.of<AudioBloc>(context);
     return new StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance.collection('audios').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -39,8 +36,9 @@ class AudioList extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            AudioPlayerPage(audioData, _audioPlayer)));
+                        builder: (context) => BlocProvider(
+                            bloc: audioBloc,
+                            child: AudioPlayerPage(audioData))));
               },
             );
           }).toList(),
